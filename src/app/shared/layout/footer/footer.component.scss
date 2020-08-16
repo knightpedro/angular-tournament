@@ -1,0 +1,16 @@
+@import "~@angular/material/theming";
+@import "variables";
+
+footer {
+  background-color: mat-color($primary);
+  color: mat_color($primary, default-contrast);
+  height: 50px;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: center;
+}

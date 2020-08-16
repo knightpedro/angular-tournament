@@ -1,0 +1,21 @@
+ul {
+  list-style: none;
+  display: flex;
+}
+
+.nav-link {
+  text-transform: uppercase;
+
+  &.home {
+    font-size: 20px;
+  }
+
+  &.image {
+    height: 26px;
+    margin-right: 8px;
+  }
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
