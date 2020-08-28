@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { User } from '../models';
 import { Observable, of, BehaviorSubject, ReplaySubject } from 'rxjs';
-import { delay, distinctUntilChanged, map } from 'rxjs/operators';
+import { delay, distinctUntilChanged, map, catchError } from 'rxjs/operators';
 
 @Injectable()
 export class AuthService {
@@ -20,6 +20,7 @@ export class AuthService {
   login(username: string, password: string): Observable<User> {
     return of({ id: '1', name: username, email: 'user@test.com' }).pipe(
       delay(1000),
+      catchError((err) => of(null)),
       map((user) => {
         this.setAuth(user);
         return user;

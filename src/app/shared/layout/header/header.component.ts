@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService, User } from 'src/app/core';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-header',
@@ -10,7 +11,11 @@ import { Router } from '@angular/router';
 export class HeaderComponent implements OnInit {
   user: User;
 
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(
+    private auth: AuthService,
+    private router: Router,
+    private snackbar: MatSnackBar
+  ) {}
 
   ngOnInit(): void {
     this.auth.currentUser.subscribe((user) => {
@@ -21,5 +26,8 @@ export class HeaderComponent implements OnInit {
   logout() {
     this.auth.logout();
     this.router.navigateByUrl('/');
+    this.snackbar.open('Logged out', null, {
+      duration: 5000,
+    });
   }
 }

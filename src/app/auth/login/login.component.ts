@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/core';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -11,8 +12,9 @@ import { AuthService } from 'src/app/core';
 export class LoginComponent implements OnInit {
   username: string;
   password: string;
-  submitting: boolean = false;
   returnUrl: string;
+  submitting = false;
+  loginFailure = false;
 
   constructor(
     private auth: AuthService,
@@ -29,8 +31,14 @@ export class LoginComponent implements OnInit {
       return;
     }
     this.submitting = true;
-    this.auth.login(this.username, this.password).subscribe(() => {
-      this.router.navigateByUrl(this.returnUrl);
+    this.loginFailure = false;
+    this.auth.login(this.username, this.password).subscribe((user) => {
+      if (user) {
+        this.router.navigateByUrl(this.returnUrl);
+      } else {
+        this.loginFailure = true;
+        form.resetForm();
+      }
       this.submitting = false;
     });
   }
