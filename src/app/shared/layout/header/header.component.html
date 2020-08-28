@@ -1,12 +1,26 @@
 <mat-toolbar class="mat-elevation-z6" color="primary">
-  <a mat-button class="nav-link home">Tournament</a>
+  <a [routerLink]="['/']" mat-button class="nav-link home">Tournament</a>
   <ul role="navigation">
-    <li><a mat-button class="nav-link">My tournaments</a></li>
+    <li>
+      <a mat-button class="nav-link" [routerLink]="['/schedule/create']"
+        >My tournaments</a
+      >
+    </li>
     <li><a mat-button class="nav-link">Guide</a></li>
   </ul>
   <span class="spacer"></span>
-  <a mat-button class="nav-link">Login</a>
-  <a mat-button class="nav-link">Sign Up</a>
+  <div *ngIf="user">
+    <a mat-button class="nav-link" [routerLink]="['/profile']"
+      ><mat-icon aria-hidden="false" aria-label="Example home icon"
+        >person</mat-icon
+      >{{ user.name }}</a
+    >
+    <button mat-button class="nav-link" (click)="logout()">Logout</button>
+  </div>
+  <div *ngIf="!user">
+    <a mat-button class="nav-link" [routerLink]="['/login']">Login</a>
+    <a mat-button class="nav-link" [routerLink]="['/register']">Sign Up</a>
+  </div>
   <a mat-button>
     <img
       class="nav-link image"

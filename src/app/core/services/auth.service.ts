@@ -1,19 +1,51 @@
 import { Injectable } from '@angular/core';
 import { User } from '../models';
+import { Observable, of, BehaviorSubject, ReplaySubject } from 'rxjs';
+import { delay, distinctUntilChanged, map } from 'rxjs/operators';
 
 @Injectable()
 export class AuthService {
-  private currentUser: User;
+  private currentUserSubject = new BehaviorSubject<User>(null);
+  public currentUser = this.currentUserSubject
+    .asObservable()
+    .pipe(distinctUntilChanged());
 
-  login(username: string, password: string) {
-    this.currentUser = { id: '1', name: username, email: 'user@test.com' };
+  private isAuthenticatedSubject = new ReplaySubject<boolean>(1);
+  public isAuthenticated = this.isAuthenticatedSubject.asObservable();
+
+  constructor() {
+    this.populate();
   }
 
-  logout() {
-    this.currentUser = null;
+  login(username: string, password: string): Observable<User> {
+    return of({ id: '1', name: username, email: 'user@test.com' }).pipe(
+      delay(1000),
+      map((user) => {
+        this.setAuth(user);
+        return user;
+      })
+    );
   }
 
-  isAuthenticated() {
-    return !!this.currentUser;
+  logout(): void {
+    this.purgeAuth();
+  }
+
+  populate(): void {
+    this.purgeAuth();
+  }
+
+  getCurrentUser(): User {
+    return this.currentUserSubject.value;
+  }
+
+  private setAuth(user: User): void {
+    this.currentUserSubject.next(user);
+    this.isAuthenticatedSubject.next(true);
+  }
+
+  private purgeAuth(): void {
+    this.currentUserSubject.next(null);
+    this.isAuthenticatedSubject.next(false);
   }
 }

@@ -1,1 +1,52 @@
-<p>login works!</p>
+<div class="container" fxLayoutAlign="center center">
+  <div class="form-container mat-elevation-z6" fxLayout="column">
+    <h2 class="mat-h2">Login</h2>
+    <form
+      #loginForm="ngForm"
+      (ngSubmit)="onSubmit(loginForm)"
+      fxLayout="column"
+      fxLayoutGap="10px"
+    >
+      <mat-form-field hideRequiredMarker>
+        <mat-label>Username</mat-label>
+        <input
+          matInput
+          autocomplete="username"
+          name="username"
+          required
+          [(ngModel)]="username"
+          #usernameField="ngModel"
+        />
+        <mat-error *ngIf="usernameField.errors && usernameField.errors.required"
+          >Enter your username</mat-error
+        >
+      </mat-form-field>
+      <mat-form-field hideRequiredMarker>
+        <mat-label>Password</mat-label>
+        <input
+          matInput
+          name="password"
+          type="password"
+          autocomplete="current-password"
+          required
+          [(ngModel)]="password"
+          #passwordField="ngModel"
+        />
+        <mat-error *ngIf="passwordField.errors && passwordField.errors.required"
+          >Enter your password</mat-error
+        >
+      </mat-form-field>
+      <button
+        type="submit"
+        [disabled]="submitting"
+        mat-flat-button
+        color="primary"
+      >
+        Login
+      </button>
+      <a mat-stroked-button [routerLink]="['/register']" color="primary"
+        >Sign up</a
+      >
+    </form>
+  </div>
+</div>

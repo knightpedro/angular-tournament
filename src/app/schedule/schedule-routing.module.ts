@@ -6,8 +6,8 @@ import { AuthGuard } from '../core';
 const routes: Routes = [
   {
     path: 'create',
-    component: CreateScheduleComponent,
     canActivate: [AuthGuard],
+    component: CreateScheduleComponent,
   },
 ];
 
