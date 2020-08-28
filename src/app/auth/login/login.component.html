@@ -1,7 +1,7 @@
-<div class="container" fxLayoutAlign="center center">
+<div fxFlexFill fxLayoutAlign="center center">
   <div class="form-container mat-elevation-z6" fxLayout="column">
     <h2 class="mat-h2">Login</h2>
-    <div *ngIf="loginFailure" class="login-failure">
+    <div *ngIf="loginFailure" class="form-failure">
       Login failed. Check your username and password.
     </div>
     <form

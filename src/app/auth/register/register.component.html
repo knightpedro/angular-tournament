@@ -1,1 +1,77 @@
-<p>register works!</p>
+<div fxFlexFill fxLayoutAlign="center center">
+  <div class="form-container mat-elevation-z6" fxLayout="column">
+    <h2 class="mat-h2">Sign Up</h2>
+    <div class="form-failure" *ngIf="registrationFailure">
+      Sign up failed. Please try again.
+    </div>
+    <form
+      #registerForm="ngForm"
+      (ngSubmit)="onSubmit(registerForm)"
+      fxLayout="column"
+      fxLayoutGap="10px"
+    >
+      <mat-form-field hideRequiredMarker>
+        <mat-label>Username</mat-label>
+        <input
+          matInput
+          name="username"
+          required
+          [(ngModel)]="username"
+          #usernameField="ngModel"
+        />
+        <mat-error *ngIf="usernameField.errors && usernameField.errors.required"
+          >Enter a username</mat-error
+        >
+      </mat-form-field>
+      <mat-form-field hideRequiredMarker>
+        <mat-label>Email</mat-label>
+        <input
+          matInput
+          name="email"
+          type="email"
+          required
+          email
+          [(ngModel)]="email"
+          #emailField="ngModel"
+        />
+        <mat-error *ngIf="emailField.errors && emailField.errors.required"
+          >Enter your email</mat-error
+        >
+        <mat-error *ngIf="emailField.errors && emailField.errors.email"
+          >Enter a valid email</mat-error
+        >
+      </mat-form-field>
+      <mat-form-field hideRequiredMarker>
+        <mat-label>Password</mat-label>
+        <input
+          matInput
+          name="password"
+          type="password"
+          required
+          [(ngModel)]="password"
+          minlength="8"
+          #passwordField="ngModel"
+        />
+        <mat-error *ngIf="passwordField.errors && passwordField.errors.required"
+          >Enter a password</mat-error
+        >
+        <mat-error
+          *ngIf="passwordField.errors && passwordField.errors.minlength"
+          >Password must be at least 8 characters long</mat-error
+        >
+      </mat-form-field>
+      <button
+        type="submit"
+        [disabled]="submitting"
+        mat-flat-button
+        color="primary"
+      >
+        Register
+      </button>
+      <span class="mat-caption" fxFlexOffset="20px"
+        >Already have an account?
+        <a [routerLink]="['/login']" mat-button color="primary">Login</a></span
+      >
+    </form>
+  </div>
+</div>

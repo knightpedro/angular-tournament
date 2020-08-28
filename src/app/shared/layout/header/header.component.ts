@@ -27,7 +27,7 @@ export class HeaderComponent implements OnInit {
     this.auth.logout();
     this.router.navigateByUrl('/');
     this.snackbar.open('Logged out', null, {
-      duration: 5000,
+      duration: 2000,
     });
   }
 }
