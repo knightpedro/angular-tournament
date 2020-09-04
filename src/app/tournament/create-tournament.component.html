@@ -1,0 +1,39 @@
+<div fxFlexFill fxLayout="column" fxLayoutAlign="center center">
+  <h1 class="mat-h1">New Tournament</h1>
+  <form
+    fxLayout="column"
+    fxLayoutGap="10px"
+    #form="ngForm"
+    (ngSubmit)="onSubmit(form)"
+  >
+    <mat-form-field hideRequiredMarker>
+      <mat-label>Tournament Name</mat-label>
+      <input
+        name="name"
+        matInput
+        placeholder="My Tournament"
+        required
+        [(ngModel)]="name"
+      />
+      <mat-error>Enter a name for the tournament</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Scoring Method</mat-label>
+      <mat-select name="scoring" [(ngModel)]="scoring">
+        <mat-option value="highest">Highest score wins</mat-option>
+        <mat-option value="lowest">Lowest score wins</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div>
+      <button
+        type="submit"
+        [disabled]="form.submitted && !form.valid"
+        mat-raised-button
+        color="primary"
+      >
+        Create
+      </button>
+    </div>
+  </form>
+</div>

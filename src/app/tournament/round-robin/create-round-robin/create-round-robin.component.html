@@ -1,0 +1,31 @@
+<div>
+  <form
+    fxLayout="column"
+    fxLayoutGap="10px"
+    #form="ngForm"
+    (ngSubmit)="onSubmit(form)"
+  >
+    <mat-form-field hideRequiredMarker>
+      <mat-label>Rounds</mat-label>
+      <input
+        matInput
+        name="rounds"
+        type="number"
+        required
+        min="1"
+        max="10"
+        [(ngModel)]="rounds"
+        #roundsField="ngModel"
+      />
+      <mat-error *ngIf="roundsField.errors && roundsField.errors.required"
+        >Enter number of rounds</mat-error
+      >
+      <mat-error *ngIf="roundsField.errors && roundsField.errors.min"
+        >Rounds must be at least 1</mat-error
+      >
+      <mat-error *ngIf="roundsField.errors && roundsField.errors.max"
+        >Maximum number of rounds is 10</mat-error
+      >
+    </mat-form-field>
+  </form>
+</div>

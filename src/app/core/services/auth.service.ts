@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { User } from '../models';
-import { Observable, of, BehaviorSubject, ReplaySubject } from 'rxjs';
+import { Observable, of, BehaviorSubject } from 'rxjs';
 import {
   delay,
   distinctUntilChanged,
@@ -12,11 +12,12 @@ import {
 @Injectable()
 export class AuthService {
   private currentUserSubject = new BehaviorSubject<User>(null);
+  private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
+
   public currentUser = this.currentUserSubject
     .asObservable()
     .pipe(distinctUntilChanged());
 
-  private isAuthenticatedSubject = new ReplaySubject<boolean>(1);
   public isAuthenticated = this.isAuthenticatedSubject.asObservable();
 
   constructor() {

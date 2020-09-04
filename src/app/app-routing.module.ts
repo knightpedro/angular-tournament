@@ -9,7 +9,7 @@ const routes: Routes = [
   {
     path: 'schedule',
     loadChildren: () =>
-      import('./schedule/schedule.module').then((m) => m.ScheduleModule),
+      import('./tournament/tournament.module').then((m) => m.TournamentModule),
   },
 ];
 

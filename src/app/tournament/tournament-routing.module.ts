@@ -1,13 +1,11 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { CreateScheduleComponent } from './create-schedule.component';
-import { AuthGuard } from '../core';
+import { CreateTournamentComponent } from './create-tournament.component';
 
 const routes: Routes = [
   {
     path: 'create',
-    canActivate: [AuthGuard],
-    component: CreateScheduleComponent,
+    component: CreateTournamentComponent,
   },
 ];
 
@@ -15,4 +13,6 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class ScheduleRoutingModule {}
+export class TournamentRoutingModule {
+  static Components = [CreateTournamentComponent];
+}
