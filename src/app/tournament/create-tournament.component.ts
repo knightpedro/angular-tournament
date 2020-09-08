@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ScoringMethod } from '../core';
-import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
 
 @Component({
   templateUrl: './create-tournament.component.html',
@@ -18,18 +17,13 @@ export class CreateTournamentComponent implements OnInit {
     this.form = this.fb.group({
       name: ['', Validators.required],
       scoring: ScoringMethod.HighestWins,
-      competitor: '',
     });
   }
 
-  addCompetitor() {
-    const competitor = this.form.get('competitor').value;
-    if (!competitor) return;
-    this.competitors.push(competitor);
+  addCompetitor(name: string) {
+    if (!name) return;
+    this.competitors.push(name);
     this.competitors.sort((a, b) => a.localeCompare(b));
-    this.form.patchValue({
-      competitor: '',
-    });
   }
 
   removeCompetitor(index: number) {

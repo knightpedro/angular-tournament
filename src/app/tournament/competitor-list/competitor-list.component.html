@@ -1,11 +1,33 @@
 <div>
+  <div fxLayoutGap="10px">
+    <mat-form-field>
+      <mat-label>Add Competitor</mat-label>
+      <input
+        matInput
+        placeholder="Competitor name"
+        #competitorInput
+        (keyup.enter)="add(competitorInput.value)"
+      />
+    </mat-form-field>
+    <button
+      [disabled]="!competitorInput.value"
+      mat-raised-button
+      type="button"
+      (click)="add(competitorInput.value)"
+    >
+      Add
+    </button>
+  </div>
   <mat-list>
-    <mat-list-item *ngFor="let competitor of competitors; let i = index">
-      <div mat-line>{{ competitor }}</div>
-      <button type="button" mat-icon-button (click)="remove(i)">
-        <mat-icon>close</mat-icon>
-      </button>
-      <mat-divider></mat-divider>
-    </mat-list-item>
+    <div mat-subheader>Competitors</div>
+    <div class="competitor-list-items">
+      <mat-list-item *ngFor="let competitor of competitors; let i = index">
+        <div mat-line>{{ competitor }}</div>
+        <button type="button" mat-icon-button (click)="remove(i)">
+          <mat-icon>close</mat-icon>
+        </button>
+        <mat-divider></mat-divider>
+      </mat-list-item>
+    </div>
   </mat-list>
 </div>

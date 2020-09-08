@@ -1,23 +1,27 @@
 <div fxFlexFill fxLayout="column" fxLayoutAlign="center center">
   <h1 class="mat-h1">New Tournament</h1>
-  <form fxLayout="column" [formGroup]="form" (ngSubmit)="onSubmit()">
-    <div fxLayout="row" fxLayoutGap="40px">
-      <div fxLayout="column" fxLayoutGap="10px">
-        <mat-form-field hideRequiredMarker>
-          <mat-label>Tournament Name</mat-label>
-          <input formControlName="name" matInput placeholder="My Tournament" />
-          <mat-error *ngIf="form.get('name').hasError('required')"
-            >Enter a name for the tournament</mat-error
-          >
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Scoring</mat-label>
-          <mat-select formControlName="scoring">
-            <mat-option value="highest">Highest score wins</mat-option>
-            <mat-option value="lowest">Lowest score wins</mat-option>
-          </mat-select>
-        </mat-form-field>
-
+  <div fxLayout="row" fxLayoutGap="100px">
+    <form
+      fxLayout="column"
+      fxLayoutGap="10px"
+      [formGroup]="form"
+      (ngSubmit)="onSubmit()"
+    >
+      <mat-form-field hideRequiredMarker>
+        <mat-label>Tournament Name</mat-label>
+        <input formControlName="name" matInput placeholder="My Tournament" />
+        <mat-error *ngIf="form.get('name').hasError('required')"
+          >Enter a name for the tournament</mat-error
+        >
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Scoring</mat-label>
+        <mat-select formControlName="scoring">
+          <mat-option value="highest">Highest score wins</mat-option>
+          <mat-option value="lowest">Lowest score wins</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <div>
         <button
           type="submit"
           [disabled]="submitted && !form.valid"
@@ -27,31 +31,13 @@
           Create
         </button>
       </div>
-      <div>
-        <div fxLayoutGap="10px">
-          <div mat-subheader>Competitors</div>
-          <mat-form-field>
-            <mat-label>Add Competitor</mat-label>
-            <input
-              formControlName="competitor"
-              matInput
-              placeholder="Competitor name"
-            />
-          </mat-form-field>
-          <button
-            [disabled]="!form.get('competitor').value"
-            mat-raised-button
-            type="button"
-            (click)="addCompetitor()"
-          >
-            Add
-          </button>
-        </div>
-        <app-competitor-list
-          [competitors]="competitors"
-          (onRemoveCompetitor)="removeCompetitor($event)"
-        ></app-competitor-list>
-      </div>
+    </form>
+    <div>
+      <app-competitor-list
+        [competitors]="competitors"
+        (onAddCompetitor)="addCompetitor($event)"
+        (onRemoveCompetitor)="removeCompetitor($event)"
+      ></app-competitor-list>
     </div>
-  </form>
+  </div>
 </div>
