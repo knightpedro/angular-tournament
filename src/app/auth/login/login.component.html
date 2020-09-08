@@ -20,7 +20,7 @@
           [(ngModel)]="username"
           #usernameField="ngModel"
         />
-        <mat-error *ngIf="usernameField.errors && usernameField.errors.required"
+        <mat-error *ngIf="usernameField.errors?.required"
           >Enter your username</mat-error
         >
       </mat-form-field>
@@ -35,7 +35,7 @@
           [(ngModel)]="password"
           #passwordField="ngModel"
         />
-        <mat-error *ngIf="passwordField.errors && passwordField.errors.required"
+        <mat-error *ngIf="passwordField.errors?.required"
           >Enter your password</mat-error
         >
       </mat-form-field>

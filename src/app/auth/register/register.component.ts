@@ -1,7 +1,31 @@
 import { Component, OnInit } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  AbstractControl,
+} from '@angular/forms';
 import { AuthService } from 'src/app/core';
 import { Router } from '@angular/router';
+import { CrossFieldErrorStateMatcher } from 'src/app/shared';
+import { debounceTime } from 'rxjs/operators';
+
+function passwordMatch(
+  control: AbstractControl
+): { [key: string]: boolean } | null {
+  const passwordControl = control.get('password');
+  const confirmPasswordControl = control.get('confirmPassword');
+  if (
+    passwordControl &&
+    confirmPasswordControl &&
+    confirmPasswordControl.value
+  ) {
+    if (passwordControl.value !== confirmPasswordControl.value) {
+      return { passwordMatch: true };
+    }
+  }
+  return null;
+}
 
 @Component({
   selector: 'app-register',
@@ -9,26 +33,59 @@ import { Router } from '@angular/router';
   styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent implements OnInit {
-  username: string;
-  email: string;
-  password: string;
+  form: FormGroup;
   submitting = false;
   registrationFailure = false;
+  crossFieldErrorStateMatcher = new CrossFieldErrorStateMatcher();
 
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(
+    private fb: FormBuilder,
+    private auth: AuthService,
+    private router: Router
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.form = this.fb.group({
+      username: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(16),
+        ],
+      ],
+      email: ['', [Validators.required, Validators.email]],
+      passwordGroup: this.fb.group(
+        {
+          password: [
+            '',
+            [
+              Validators.required,
+              Validators.minLength(4),
+              Validators.maxLength(16),
+            ],
+          ],
+          confirmPassword: ['', Validators.required],
+        },
+        { validators: [passwordMatch] }
+      ),
+    });
+    this.form
+      .get('passwordGroup')
+      .valueChanges.pipe(debounceTime(2000))
+      .subscribe((v) => console.log(v));
+  }
 
-  onSubmit(form: NgForm) {
-    if (!form.valid) return;
+  onSubmit() {
+    console.log(this.form);
+    if (!this.form.valid) return;
     this.submitting = true;
     this.registrationFailure = false;
-    this.auth.register(form.value).subscribe((user) => {
+    this.auth.register(this.form.value).subscribe((user) => {
       if (user) {
         this.router.navigateByUrl('/');
       } else {
         this.registrationFailure = true;
-        form.resetForm();
       }
       this.submitting = false;
     });

@@ -5,62 +5,77 @@
       Sign up failed. Please try again.
     </div>
     <form
-      #registerForm="ngForm"
-      (ngSubmit)="onSubmit(registerForm)"
+      [formGroup]="form"
+      (ngSubmit)="onSubmit()"
       fxLayout="column"
       fxLayoutGap="10px"
     >
       <mat-form-field hideRequiredMarker>
         <mat-label>Username</mat-label>
-        <input
-          matInput
-          name="username"
-          required
-          [(ngModel)]="username"
-          #usernameField="ngModel"
-        />
-        <mat-error *ngIf="usernameField.errors && usernameField.errors.required"
+        <input matInput formControlName="username" />
+        <mat-error *ngIf="form.get('username').errors?.required"
           >Enter a username</mat-error
+        >
+        <mat-error *ngIf="form.get('username').errors?.minlength"
+          >Username must be at least 3 characters</mat-error
+        >
+        <mat-error *ngIf="form.get('username').errors?.maxlength"
+          >Username must be at most 16 characters</mat-error
         >
       </mat-form-field>
       <mat-form-field hideRequiredMarker>
         <mat-label>Email</mat-label>
-        <input
-          matInput
-          name="email"
-          type="email"
-          required
-          email
-          [(ngModel)]="email"
-          #emailField="ngModel"
-        />
-        <mat-error *ngIf="emailField.errors && emailField.errors.required"
-          >Enter your email</mat-error
+        <input matInput type="email" formControlName="email" />
+        <mat-error *ngIf="form.get('email').errors?.required"
+          >Enter your email address</mat-error
         >
-        <mat-error *ngIf="emailField.errors && emailField.errors.email"
-          >Enter a valid email</mat-error
+        <mat-error *ngIf="form.get('email').errors?.email"
+          >Enter a valid email address</mat-error
         >
       </mat-form-field>
-      <mat-form-field hideRequiredMarker>
-        <mat-label>Password</mat-label>
-        <input
-          matInput
-          name="password"
-          type="password"
-          required
-          [(ngModel)]="password"
-          minlength="8"
-          #passwordField="ngModel"
-        />
-        <mat-error *ngIf="passwordField.errors && passwordField.errors.required"
-          >Enter a password</mat-error
-        >
-        <mat-error
-          *ngIf="passwordField.errors && passwordField.errors.minlength"
-          >Password must be at least 8 characters long</mat-error
-        >
-      </mat-form-field>
+      <div fxLayout="column" fxLayoutGap="10px" formGroupName="passwordGroup">
+        <mat-form-field hideRequiredMarker hintLabel="4-16 characters">
+          <mat-label>Password</mat-label>
+          <input
+            matInput
+            type="password"
+            formControlName="password"
+            #passwordInput
+          />
+          <mat-hint align="end">{{
+            passwordInput.value?.length || 0
+          }}</mat-hint>
+          <mat-error *ngIf="form.get('passwordGroup.password').errors?.required"
+            >Enter a password</mat-error
+          >
+          <mat-error
+            *ngIf="form.get('passwordGroup.password').errors?.minlength"
+            >Password must contain at least 4 characters</mat-error
+          >
+          <mat-error
+            *ngIf="form.get('passwordGroup.password').errors?.maxlength"
+            >Password cannot be longer than 16 characters</mat-error
+          >
+        </mat-form-field>
+        <mat-form-field hideRequiredMarker>
+          <mat-label>Confirm password</mat-label>
+          <input
+            matInput
+            type="password"
+            formControlName="confirmPassword"
+            [errorStateMatcher]="crossFieldErrorStateMatcher"
+          />
+          <mat-error
+            *ngIf="form.get('passwordGroup.confirmPassword').errors?.required"
+            >Confirm your password</mat-error
+          >
+          <mat-error *ngIf="form.get('passwordGroup').errors?.passwordMatch"
+            >Passwords don't match</mat-error
+          >
+        </mat-form-field>
+      </div>
       <button
+        fxFlexOffset="20px"
         type="submit"
         [disabled]="submitting"
         mat-flat-button
