@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ScoringMethod } from '../core';
+import { ScoringMethod } from '../../core';
 
 @Component({
   templateUrl: './create-tournament.component.html',

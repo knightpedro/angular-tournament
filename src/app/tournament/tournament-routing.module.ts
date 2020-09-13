@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { CreateTournamentComponent } from './create-tournament.component';
+import { CreateTournamentComponent } from './create-tournament/create-tournament.component';
 
 const routes: Routes = [
   {
