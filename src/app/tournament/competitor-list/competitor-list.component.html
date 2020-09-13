@@ -8,10 +8,12 @@
         #competitorInput
         (keyup.enter)="add(competitorInput.value)"
       />
+      <mat-hint>Enter at least 4 competitors</mat-hint>
     </mat-form-field>
     <button
       [disabled]="!competitorInput.value"
-      mat-raised-button
+      mat-button
+      color="primary"
       type="button"
       (click)="add(competitorInput.value)"
     >
@@ -19,7 +21,6 @@
     </button>
   </div>
   <mat-list>
-    <div mat-subheader>Competitors</div>
     <div class="competitor-list-items">
       <mat-list-item *ngFor="let competitor of competitors; let i = index">
         <div mat-line>{{ competitor }}</div>

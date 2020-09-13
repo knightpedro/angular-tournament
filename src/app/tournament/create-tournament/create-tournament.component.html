@@ -1,43 +1,161 @@
 <div fxFlexFill fxLayout="column" fxLayoutAlign="center center">
-  <h1 class="mat-h1">New Tournament</h1>
-  <div fxLayout="row" fxLayoutGap="100px">
-    <form
-      fxLayout="column"
-      fxLayoutGap="10px"
-      [formGroup]="form"
-      (ngSubmit)="onSubmit()"
-    >
-      <mat-form-field hideRequiredMarker>
-        <mat-label>Tournament Name</mat-label>
-        <input formControlName="name" matInput placeholder="My Tournament" />
-        <mat-error *ngIf="form.get('name').hasError('required')"
-          >Enter a name for the tournament</mat-error
+  <h1 class="mat-h1">Create Tournament</h1>
+  <div [formGroup]="form">
+    <mat-accordion>
+      <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)">
+        <mat-expansion-panel-header>
+          <mat-panel-title>Tournament Details</mat-panel-title>
+          <mat-panel-description>
+            {{ form.get("details.name").value }}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div fxLayout="column" formGroupName="details" fxLayoutGap="10px">
+          <mat-form-field hideRequiredMarker>
+            <mat-label>Tournament Name</mat-label>
+            <input
+              #nameInput
+              formControlName="name"
+              matInput
+              placeholder="My Tournament"
+            />
+            <mat-error *ngIf="form.get('details.name').hasError('required')"
+              >Enter a name for the tournament</mat-error
+            >
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Match Scoring</mat-label>
+            <mat-select formControlName="scoring">
+              <mat-option value="highest">Highest score wins</mat-option>
+              <mat-option value="lowest">Lowest score wins</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <mat-action-row>
+          <button
+            type="button"
+            [disabled]="!form.get('details').valid"
+            mat-button
+            color="primary"
+            (click)="nextStep()"
+          >
+            Next
+          </button>
+        </mat-action-row>
+      </mat-expansion-panel>
+      <mat-expansion-panel
+        [expanded]="step === 1"
+        (opened)="setStep(1)"
+        [disabled]="!form.get('details').valid"
+      >
+        <mat-expansion-panel-header>
+          <mat-panel-title>Competitors</mat-panel-title
+          ><mat-panel-description>
+            {{ competitors.length }}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <app-competitor-list
+          [competitors]="competitors"
+          (onAddCompetitor)="addCompetitor($event)"
+          (onRemoveCompetitor)="removeCompetitor($event)"
+        ></app-competitor-list>
+        <mat-action-row>
+          <button type="button" mat-button color="warn" (click)="prevStep()">
+            Previous
+          </button>
+          <button
+            type="button"
+            [disabled]="!form.get('competitors').valid"
+            mat-button
+            color="primary"
+            (click)="nextStep()"
+          >
+            Next
+          </button>
+        </mat-action-row>
+      </mat-expansion-panel>
+      <mat-expansion-panel
+        [expanded]="step === 2"
+        (opened)="setStep(2)"
+        [disabled]="
+          !form.get('details').valid || !form.get('competitors').valid
+        "
+      >
+        <mat-expansion-panel-header>
+          <mat-panel-title>Format</mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-form-field>
+          <mat-label>Format</mat-label>
+          <mat-select
+            formControlName="format"
+            (selectionChange)="resetRoundRobin()"
+          >
+            <mat-option *ngFor="let opt of formatOptions" [value]="opt">{{
+              opt
+            }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <div
+          *ngIf="isRoundRobin"
+          formGroupName="roundRobin"
+          fxLayout="column"
+          fxLayoutGap="10px"
         >
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Match Scoring</mat-label>
-        <mat-select formControlName="scoring">
-          <mat-option value="highest">Highest score wins</mat-option>
-          <mat-option value="lowest">Lowest score wins</mat-option>
-        </mat-select>
-      </mat-form-field>
-      <div>
-        <button
-          type="submit"
-          [disabled]="submitted && !form.valid"
-          mat-raised-button
-          color="primary"
-        >
-          Create
-        </button>
-      </div>
-    </form>
-    <div>
-      <app-competitor-list
-        [competitors]="competitors"
-        (onAddCompetitor)="addCompetitor($event)"
-        (onRemoveCompetitor)="removeCompetitor($event)"
-      ></app-competitor-list>
-    </div>
+          <mat-form-field hideRequiredMarker>
+            <mat-label>Rounds</mat-label>
+            <input
+              type="number"
+              formControlName="rounds"
+              matInput
+              min="1"
+              max="4"
+            />
+            <mat-error
+              *ngIf="form.get('roundRobin.rounds').hasError('required')"
+              >Number of rounds is required</mat-error
+            >
+            <mat-error *ngIf="form.get('roundRobin.rounds').hasError('min')"
+              >Minimum rounds is 1</mat-error
+            >
+            <mat-error *ngIf="form.get('roundRobin.rounds').hasError('max')"
+              >Maximum rounds is 4</mat-error
+            >
+          </mat-form-field>
+          <mat-checkbox formControlName="pools" (change)="resetPoolCount()"
+            >Pools</mat-checkbox
+          >
+          <mat-form-field
+            *ngIf="form.get('roundRobin.pools').value"
+            hideRequiredMarker
+          >
+            <mat-label>Number of pools</mat-label>
+            <input type="number" formControlName="poolCount" matInput min="2" />
+            <mat-error
+              *ngIf="form.get('roundRobin.poolCount').hasError('required')"
+              >Number of pools is required</mat-error
+            >
+            <mat-error *ngIf="form.get('roundRobin.poolCount').hasError('min')"
+              >Minimum number of pools is 2</mat-error
+            >
+            <mat-error *ngIf="form.get('roundRobin.poolCount').hasError('max')"
+              >Maximum number of pools is
+              {{ form.get("roundRobin.poolCount").errors.max.max }}</mat-error
+            >
+          </mat-form-field>
+        </div>
+        <mat-action-row>
+          <button type="button" mat-button color="warn" (click)="prevStep()">
+            Previous
+          </button>
+          <button
+            type="button"
+            [disabled]="!form.valid"
+            mat-button
+            color="primary"
+          >
+            Create draw
+          </button>
+        </mat-action-row>
+      </mat-expansion-panel>
+    </mat-accordion>
   </div>
 </div>
